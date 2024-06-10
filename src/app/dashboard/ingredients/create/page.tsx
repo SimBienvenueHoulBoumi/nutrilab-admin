@@ -1,28 +1,50 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ClipLoader } from 'react-spinners';
 import CustomInput from '@/components/myInput.components';
+import { createIngredient, deleteIngredient } from '@/services/ingredients.service';
+import { getArticles } from '@/services/articles.service';
 
 interface IIngredientFormValues {
-  name: string;
-  picture: string;
-  labelDosage: string;
-  dosage: string;
+    name: string;
+    picture: string;
+    labelDosage: string;
+    dosage: string;
+}
+
+interface Article {
+    id: string;
+    name: string;
 }
 
 function CreateIngredient() {
     const { register, handleSubmit } = useForm<IIngredientFormValues>();
     const [loading, setLoading] = useState(false);
+    const [articles, setArticles] = useState<Article[]>([]);
+    const [selectedArticleId, setSelectedArticleId] = useState<string>('');
+
+    useEffect(() => {
+        const fetchArticles = async () => {
+            try {
+                const articles = await getArticles();
+                setArticles(articles);
+            } catch (error) {
+                console.error("Failed to fetch articles:", error);
+            }
+        };
+
+        fetchArticles();
+    }, []);
 
     const onSubmit: SubmitHandler<IIngredientFormValues> = async (data, event) => {
         event?.preventDefault();
         setLoading(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("Ingredient created:", data);
+            await createIngredient(data, selectedArticleId);
+            setLoading(false);
             setTimeout(() => {
                 window.location.href = '/dashboard/ingredients';
             }, 2000);
@@ -40,6 +62,25 @@ function CreateIngredient() {
                         Create a New Ingredient
                     </h2>
                     <form className="space-y-3" method="POST" onSubmit={handleSubmit(onSubmit)}>
+                        <div>
+                            <label htmlFor="article" className="block text-sm font-medium text-gray-700">
+                                Select Article
+                            </label>
+                            <select
+                                id="article"
+                                value={selectedArticleId}
+                                onChange={(e) => setSelectedArticleId(e.target.value)}
+                                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-sky-400 focus:border-sky-400 sm:text-sm"
+                                required
+                            >
+                                <option value="" disabled>Select an article</option>
+                                {articles.map((article) => (
+                                    <option key={article.id} value={article.id}>
+                                        {article.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <CustomInput<IIngredientFormValues>
                             label="name"
                             type='text'
@@ -67,9 +108,7 @@ function CreateIngredient() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`flex w-full justify-center rounded-md border border-transparent bg-[#20847D] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 ${
-                                loading ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}
+                            className={`flex w-full justify-center rounded-md border border-transparent bg-[#20847D] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {loading ? <ClipLoader color="#fff" size={20} /> : 'Create Ingredient'}
                         </button>

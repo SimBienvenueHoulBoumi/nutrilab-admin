@@ -4,12 +4,23 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ClipLoader } from 'react-spinners';
 import CustomInput from '@/components/myInput.components';
+import { createArticle } from '@/services/articles.service';
 
 interface IArticleFormValues {
   name: string;
   description: string;
   area: string;
 }
+
+const continents = [
+  "Africa",
+  "Antarctica",
+  "Asia",
+  "Europe",
+  "North America",
+  "Australia",
+  "South America"
+];
 
 function CreateArticle() {
   const { register, handleSubmit } = useForm<IArticleFormValues>();
@@ -21,10 +32,12 @@ function CreateArticle() {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log("Article created:", data);
+      await createArticle(data);
       setLoading(false);
+      setTimeout(() => {
+        window.location.href = '/dashboard/articles';
+      }, 2000);
     } catch (error) {
-      console.error("Error creating article:", error);
       setLoading(false);
     }
   };
@@ -49,17 +62,26 @@ function CreateArticle() {
               register={register}
               required={true}
             />
-            <CustomInput<IArticleFormValues>
-              label="area"
-              type='text'
-              register={register}
-              required={true}
-            />
+            <div>
+              <label htmlFor="area" className="block text-sm font-medium text-gray-700">
+                Area
+              </label>
+              <select
+                id="area"
+                {...register("area", { required: true })}
+                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-sky-400 focus:border-sky-400 sm:text-sm"
+              >
+                {continents.map((continent, index) => (
+                  <option key={index} value={continent}>
+                    {continent}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button
               type="submit"
               disabled={loading}
-              className={`flex w-full justify-center rounded-md border border-transparent bg-[#20847D] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+              className={`flex w-full justify-center rounded-md border border-transparent bg-[#20847D] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {loading ? <ClipLoader color="#fff" size={20} /> : 'Create Article'}
             </button>

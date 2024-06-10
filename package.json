@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "jose": "^5.4.0",
     "jwt-decode": "^4.0.0",
     "next": "14.2.3",
