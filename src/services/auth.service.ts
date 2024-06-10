@@ -58,3 +58,11 @@ export default async function verifyUser(username: string, password: string) {
 export async function cleanAndRemoveToken(): Promise<void> {
     cookies().delete('token');
 }
+
+export async function getToken(): Promise<string> {
+    const tokenCookie = cookies().get('token');
+    if (!tokenCookie) {
+      throw new Error('Token not found');
+    }
+    return tokenCookie.value;
+  }

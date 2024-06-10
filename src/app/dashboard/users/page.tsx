@@ -1,58 +1,33 @@
-"use client"
+'use client';
 
-import React, { useState } from 'react';
-
-interface User {
-  id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
-  article: number;
-  ingredients: number;
-}
-
-const users: User[] = [
-  { id: 1, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 1, ingredients: 1001 },
-  { id: 2, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 2, ingredients: 1002 },
-  { id: 3, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 3, ingredients: 1003 },
-  { id: 4, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 4, ingredients: 1004 },
-  { id: 5, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 5, ingredients: 1005 },
-  { id: 6, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 6, ingredients: 1006 },
-  { id: 7, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 7, ingredients: 1007 },
-  { id: 8, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 8, ingredients: 1008 },
-  { id: 9, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 9, ingredients: 1009 },
-  { id: 10, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 10, ingredients: 1010 },
-  { id: 11, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 11, ingredients: 1011 },
-  { id: 12, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 12, ingredients: 1012 },
-  { id: 13, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 13, ingredients: 1013 },
-  { id: 14, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 14, ingredients: 1014 },
-  { id: 15, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 15, ingredients: 1015 },
-  { id: 16, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 16, ingredients: 1016 },
-  { id: 17, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 17, ingredients: 1017 },
-  { id: 18, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 18, ingredients: 1018 },
-  { id: 19, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 19, ingredients: 1019 },
-  { id: 20, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 20, ingredients: 1020 },
-  { id: 21, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 21, ingredients: 1021 },
-  { id: 22, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 22, ingredients: 1022 },
-  { id: 23, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 23, ingredients: 1023 },
-  { id: 24, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 24, ingredients: 1024 },
-  { id: 25, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 25, ingredients: 1025 },
-  { id: 26, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 26, ingredients: 1026 },
-  { id: 27, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 27, ingredients: 1027 },
-  { id: 28, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 28, ingredients: 1028 },
-  { id: 29, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 29, ingredients: 1029 },
-  { id: 30, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 30, ingredients: 1030 },
-  { id: 31, username: 'Marjy Ferencz', firstname: 'Marjy', lastname: 'Ferencz', article: 31, ingredients: 1031 },
-  { id: 32, username: 'Yancy Tear', firstname: 'Yancy', lastname: 'Tear', article: 32, ingredients: 1032 },
-  { id: 33, username: 'Hart Hagerty', firstname: 'Hart', lastname: 'Hagerty', article: 33, ingredients: 1033 },
-  { id: 34, username: 'Brice Swyre', firstname: 'Brice', lastname: 'Swyre', article: 34, ingredients: 1034 },
-];
+import React, { useEffect, useState } from 'react';
+import { getUsers, deleteUserById } from "@/services/users.service";
+import User from "@/interface/users.interface";
+import MyLoader from '@/components/loader.components';
 
 const ITEMS_PER_PAGE = 5;
 
 export default function Page() {
+  const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const fetchedUsers = await getUsers();
+      setUsers(fetchedUsers);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const filteredUsers = users.filter(user =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
@@ -79,6 +54,18 @@ export default function Page() {
     setCurrentPage(1);
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteUserById(id);
+      fetchUsers();
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+    }
+  };
+
+
+  if (loading) return <MyLoader/>;
+
   return (
     <div className="overflow-y-auto max-w-full">
       <div className="flex flex-row space-x-2 my-2">
@@ -96,29 +83,17 @@ export default function Page() {
         </label>
       </div>
       <table className="table card bg-[#FFFF] rounded-xl">
-        {/* head */}
         <thead>
           <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
             <th>Username</th>
-            <th>Article saved</th>
-            <th>Ingredients saved</th>
-            <th></th>
+            <th>Firstname</th>
+            <th>Lastname</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {currentItems.map(user => (
             <tr key={user.id}>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
               <td>
                 <div className="flex items-center gap-2">
                   <div>
@@ -126,27 +101,24 @@ export default function Page() {
                   </div>
                 </div>
               </td>
-              <td>
-                {user.article}
-              </td>
-              <td>{user.ingredients}</td>
+              <td>{user.firstname}</td>
+              <td>{user.lastname}</td>
               <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-              <th>
-                <button className="btn btn-error btn-xs">delete</button>
+                <button
+                  onClick={() => handleDelete(user.id)}
+                  className="btn btn-error btn-xs"
+                >
+                  delete
+                </button>
               </th>
             </tr>
           ))}
         </tbody>
-        {/* foot */}
         <tfoot>
           <tr>
-            <th></th>
             <th>Username</th>
-            <th>Article saved</th>
-            <th>Ingredients saved</th>
-            <th></th>
+            <th>Firstname</th>
+            <th>Lastname</th>
             <th></th>
           </tr>
         </tfoot>
@@ -169,4 +141,6 @@ export default function Page() {
       </div>
     </div>
   );
+
+
 }

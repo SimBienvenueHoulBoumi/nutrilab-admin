@@ -1,240 +1,72 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Article } from '@/interface/article.interface';
+import { getArticles, deleteArticleById } from '@/services/articles.service';
+import MyLoader from '@/components/loader.components';
 
-interface Article {
-    id: number;
-    name: string;
-    description: string;
-    area: string;
-    username: string;
-}
-
-const articles: Article[] = [
-    {
-        id: 1,
-        name: 'Article 1',
-        description: 'Description 1',
-        area: 'Area 1',
-        username: 'User 1'
-    },
-    {
-        id: 2,
-        name: 'Article 2',
-        description: 'Description 2',
-        area: 'Area 2',
-        username: 'User 2'
-    },
-    {
-        id: 3,
-        name: 'Article 3',
-        description: 'Description 3',
-        area: 'Area 3',
-        username: 'User 3'
-    },
-    {
-        id: 4,
-        name: 'Article 4',
-        description: 'Description 4',
-        area: 'Area 4',
-        username: 'User 4'
-    },
-    {
-        id: 5,
-        name: 'Article 5',
-        description: 'Description 5',
-        area: 'Area 5',
-        username: 'User 5'
-    },
-    {
-        id: 6,
-        name: 'Article 6',
-        description: 'Description 6',
-        area: 'Area 6',
-        username: 'User 6'
-    },
-    {
-        id: 7,
-        name: 'Article 7',
-        description: 'Description 7',
-        area: 'Area 7',
-        username: 'User 7'
-    },
-    {
-        id: 8,
-        name: 'Article 8',
-        description: 'Description 8',
-        area: 'Area 8',
-        username: 'User 8'
-    },
-    {
-        id: 9,
-        name: 'Article 9',
-        description: 'Description 9',
-        area: 'Area 9',
-        username: 'User 9'
-    },
-    {
-        id: 10,
-        name: 'Article 10',
-        description: 'Description 10',
-        area: 'Area 10',
-        username: 'User 10'
-    },
-    {
-        id: 11,
-        name: 'Article 11',
-        description: 'Description 11',
-        area: 'Area 11',
-        username: 'User 11'
-    },
-    {
-        id: 12,
-        name: 'Article 12',
-        description: 'Description 12',
-        area: 'Area 12',
-        username: 'User 12'
-    },
-    {
-        id: 13,
-        name: 'Article 13',
-        description: 'Description 13',
-        area: 'Area 13',
-        username: 'User 13'
-    },
-    {
-        id: 14,
-        name: 'Article 14',
-        description: 'Description 14',
-        area: 'Area 14',
-        username: 'User 14'
-    },
-    {
-        id: 15,
-        name: 'Article 15',
-        description: 'Description 15',
-        area: 'Area 15',
-        username: 'User 15'
-    },
-    {
-        id: 16,
-        name: 'Article 16',
-        description: 'Description 16',
-        area: 'Area 16',
-        username: 'User 16'
-    },
-    {
-        id: 17,
-        name: 'Article 17',
-        description: 'Description 17',
-        area: 'Area 17',
-        username: 'User 17'
-    },
-    {
-        id: 18,
-        name: 'Article 18',
-        description: 'Description 18',
-        area: 'Area 18',
-        username: 'User 18'
-    },
-    {
-        id: 19,
-        name: 'Article 19',
-        description: 'Description 19',
-        area: 'Area 19',
-        username: 'User 19'
-    },
-    {
-        id: 20,
-        name: 'Article 20',
-        description: 'Description 20',
-        area: 'Area 20',
-        username: 'User 20'
-    },
-    {
-        id: 21,
-        name: 'Article 21',
-        description: 'Description 21',
-        area: 'Area 21',
-        username: 'User 21'
-    },
-    {
-        id: 22,
-        name: 'Article 22',
-        description: 'Description 22',
-        area: 'Area 22',
-        username: 'User 22'
-    },
-    {
-        id: 23,
-        name: 'Article 23',
-        description: 'Description 23',
-        area: 'Area 23',
-        username: 'User 23'
-    },
-    {
-        id: 24,
-        name: 'Article 24',
-        description: 'Description 24',
-        area: 'Area 24',
-        username: 'User 24'
-    },
-    {
-        id: 25,
-        name: 'Article 25',
-        description: 'Description 25',
-        area: 'Area 25',
-        username: 'User 25'
-    },
-    {
-        id: 26,
-        name: 'Article 26',
-        description: 'Description 26',
-        area: 'Area 26',
-        username: 'User 26'
-    },
-    {
-        id: 27,
-        name: 'Article 27',
-        description: 'Description 27',
-        area: 'Area 27',
-        username: 'User 27'
-    },
-    {
-        id: 28,
-        name: 'Article 28',
-        description: 'Description 28',
-        area: 'Area 28',
-        username: 'User 28'
-    },
-    {
-        id: 29,
-        name: 'Article 29',
-        description: 'Description 29',
-        area: 'Area 29',
-        username: 'User 29'
-    },
-    {
-        id: 30,
-        name: 'Article 30',
-        description: 'Description 30',
-        area: 'Area 30',
-        username: 'User 30'
-    }
-];
-
-
-const ITEMS_PER_PAGE = 5; // Number of items per page
-
+const ITEMS_PER_PAGE = 5;
 
 export default function Page() {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
+    const [articles, setArticles] = useState<Article[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedArticles, setSelectedArticles] = useState<string[]>([]);
+
+    useEffect(() => {
+        const fetchArticles = async () => {
+            try {
+                const fetchedArticles = await getArticles();
+                setArticles(fetchedArticles);
+            } catch (error) {
+                console.error('Failed to fetch articles:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchArticles();
+    }, []);
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
-        setCurrentPage(1); // Réinitialiser à la première page lors de la recherche
+        setCurrentPage(1);
+    };
+
+    const handleDeleteArticle = async (id: string) => {
+        try {
+            await deleteArticleById(id);
+        } catch (error) {
+            console.error(`Error deleting article with id ${id}:`, error);
+        }
+    };
+
+    const handleDeleteSelectedArticles = async () => {
+        try {
+            console.log(`Deleting selected articles with ids: ${selectedArticles}`); // Log the ids being deleted
+            await Promise.all(selectedArticles.map(id => deleteArticleById(id)));
+            setArticles(articles.filter(article => !selectedArticles.includes(article.id)));
+            setSelectedArticles([]);
+        } catch (error) {
+            console.error('Failed to delete selected articles:', error);
+        }
+    };
+
+    const handleSelectArticle = (id: string) => {
+        setSelectedArticles(prevSelected =>
+            prevSelected.includes(id)
+                ? prevSelected.filter(articleId => articleId !== id)
+                : [...prevSelected, id]
+        );
+    };
+
+    const handleSelectAll = () => {
+        if (selectedArticles.length === currentItems.length) {
+            setSelectedArticles([]);
+        } else {
+            setSelectedArticles(currentItems.map(article => article.id));
+        }
     };
 
     const filteredArticles = articles.filter(
@@ -242,7 +74,7 @@ export default function Page() {
             article.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             article.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             article.area.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            article.username.toLowerCase().includes(searchTerm.toLowerCase()) // Ajout de la recherche par "username"
+            article.userId.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
@@ -261,6 +93,10 @@ export default function Page() {
         }
     };
 
+    if (loading) {
+        return <MyLoader />;
+    }
+
     return (
         <div className="overflow-y-auto max-w-full">
             <div className="flex flex-row space-x-2 my-2">
@@ -277,11 +113,16 @@ export default function Page() {
                     </svg>
                 </label>
                 <div className="space-x-2">
-                    <Link href="/dashboard/articles/create"
-                        className='btn btn-outline'>create</Link>
-                    <div className='btn btn-danger'>
+                    <Link href="/dashboard/articles/create" className='btn btn-outline'>
+                        create
+                    </Link>
+                    <button
+                        onClick={handleDeleteSelectedArticles}
+                        className='btn btn-danger'
+                        disabled={selectedArticles.length === 0}
+                    >
                         delete
-                    </div>
+                    </button>
                 </div>
             </div>
 
@@ -291,14 +132,18 @@ export default function Page() {
                     <tr>
                         <th>
                             <label>
-                                <input type="checkbox" className="checkbox" />
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    onChange={handleSelectAll}
+                                    checked={selectedArticles.length === currentItems.length && currentItems.length > 0}
+                                />
                             </label>
                         </th>
                         <th>Nom</th>
                         <th>Description</th>
                         <th>Zone</th>
                         <th>Utilisateur</th>
-                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -307,7 +152,12 @@ export default function Page() {
                         <tr key={article.id}>
                             <th>
                                 <label>
-                                    <input type="checkbox" className="checkbox" />
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox"
+                                        checked={selectedArticles.includes(article.id)}
+                                        onChange={() => handleSelectArticle(article.id)}
+                                    />
                                 </label>
                             </th>
                             <td>
@@ -321,12 +171,9 @@ export default function Page() {
                                 {article.description}
                             </td>
                             <td>{article.area}</td>
-                            <td>{article.username}</td> {/* Afficher le champ "username" */}
+                            <td>{article.userId}</td>
                             <th>
-                                <button className="btn btn-ghost btn-xs">Détails</button>
-                            </th>
-                            <th>
-                                <button className="btn btn-error btn-xs">delete</button>
+                                <button className="btn btn-error btn-xs" onSubmit={() => handleDeleteArticle(article.id)}>delete</button>
                             </th>
                         </tr>
                     ))}
@@ -339,7 +186,6 @@ export default function Page() {
                         <th>Description</th>
                         <th>Zone</th>
                         <th>Utilisateur</th>
-                        <th></th>
                         <th></th>
                     </tr>
                 </tfoot>
