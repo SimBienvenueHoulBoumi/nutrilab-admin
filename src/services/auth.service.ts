@@ -1,23 +1,9 @@
 "use server"
 
 import { cookies } from 'next/headers';
-// import { isValidToken } from '@/middleware';
 import { jwtDecode } from "jwt-decode";
 
-interface DecodedToken {
-    sub: {
-        id: string;
-        username: string;
-        firstname: string;
-        lastname: string;
-        role: string;
-        password: string;
-        createdAt: string;
-        updatedAt: string;
-    };
-    iat: number;
-    exp: number;
-}
+import DecodedToken from '@/interface/auth.interface';
 
 const url = process.env.NEXT_PUBLIC_EXTERNAL_API_URL;
 
