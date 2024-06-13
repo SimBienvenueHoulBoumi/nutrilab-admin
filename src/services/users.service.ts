@@ -1,15 +1,11 @@
 import { getToken } from '../services/auth.service'
+import User from '@/interface/users.interface'
 
-interface User {
-    id: string;
-    username: string;
-    firstname: string;
-    lastname: string;
-}
+const url = process.env.NEXT_PUBLIC_EXTERNAL_API_URL;
 
 export async function getUsers(): Promise<User[]> {
     try {
-        const response = await fetch(`https://nutrilab-backend-api.onrender.com/users`, {
+        const response = await fetch(`${url}/users`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${await getToken()}`
@@ -24,7 +20,7 @@ export async function getUsers(): Promise<User[]> {
 
 export async function getUserById(id: string): Promise<User> {
     try {
-        const response = await fetch(`https://nutrilab-backend-api.onrender.com/users/${id}`, {
+        const response = await fetch(`${url}/users/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${await getToken()}`
@@ -39,7 +35,7 @@ export async function getUserById(id: string): Promise<User> {
 
 export async function deleteUserById(id: string): Promise<void> {
     try {
-        await fetch(`${process.env.LOCAL_URL}/users/${id}`, {
+        await fetch(`${url}/users/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

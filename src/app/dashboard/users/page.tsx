@@ -30,7 +30,7 @@ export default function Page() {
   }, []);
 
   const filteredUsers = users.filter(user =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
@@ -85,7 +85,7 @@ export default function Page() {
       <table className="table card bg-[#FFFF] rounded-xl">
         <thead>
           <tr>
-            <th>Username</th>
+            <th>Email</th>
             <th>Firstname</th>
             <th>Lastname</th>
             <th></th>
@@ -97,7 +97,7 @@ export default function Page() {
               <td>
                 <div className="flex items-center gap-2">
                   <div>
-                    <div className="font-bold">{user.username}</div>
+                    <div className="font-bold">{user.email}</div>
                   </div>
                 </div>
               </td>
