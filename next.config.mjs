@@ -4,6 +4,7 @@ const nextConfig = {
         domains: ['encrypted-tbn0.gstatic.com'],
     },
     
+    
 };
 
 export default nextConfig;

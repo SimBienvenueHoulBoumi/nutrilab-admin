@@ -22,7 +22,6 @@ function Home() {
                     window.location.href = '/dashboard/home';
                 }, 5000);
             } else {
-                console.log("Invalid credentials");
                 setLoading(false);
             }
         } catch (error) {

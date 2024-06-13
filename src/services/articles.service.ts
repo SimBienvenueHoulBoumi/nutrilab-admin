@@ -2,11 +2,9 @@ import { getToken } from '../services/auth.service';
 import { Article, CreateArticleDto, UpdateArticleDto } from '../interface/article.interface';
 
 import 'dotenv/config'
+const url = process.env.NEXT_PUBLIC_EXTERNAL_API_URL;
 
 export async function createArticle(articleData: CreateArticleDto): Promise<Article> {
-    const url = process.env.LOCAL_URL || 'http://localhost:4000';
-    console.log(`Making request to: ${url}/articles`);
-
     try {
         const token = await getToken();
         const response = await fetch(`${url}/articles`, {
@@ -25,9 +23,8 @@ export async function createArticle(articleData: CreateArticleDto): Promise<Arti
         }
 
         const result = await response.json();
-        console.log('Article created successfully:', result);
         return result;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to create article:', error);
         throw new Error(`Failed to create article: ${error.message}`);
     }
@@ -35,7 +32,7 @@ export async function createArticle(articleData: CreateArticleDto): Promise<Arti
 
 export async function getArticles(): Promise<Article[]> {
     try {
-        const response = await fetch(`http://localhost:4000/articles`, {
+        const response = await fetch(`${url}/articles`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${await getToken()}`
@@ -47,14 +44,14 @@ export async function getArticles(): Promise<Article[]> {
         }
 
         return await response.json();
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(`Failed to fetch articles: ${error.message}`);
     }
 }
 
 export async function getArticleById(id: string): Promise<Article> {
     try {
-        const response = await fetch(`http://localhost:4000/articles/${id}`, {
+        const response = await fetch(`${url}/articles/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${await getToken()}`
@@ -66,7 +63,7 @@ export async function getArticleById(id: string): Promise<Article> {
         }
 
         return await response.json();
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(`Failed to fetch article: ${error.message}`);
     }
 }
@@ -75,7 +72,7 @@ export async function deleteArticleById(id: string): Promise<void> {
     try {
         console.log(`Attempting to delete article with id: ${id}`);
         const token = await getToken();
-        const response = await fetch(`http://localhost:4000/articles/${id}`, {
+        const response = await fetch(`${url}/articles/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -90,7 +87,7 @@ export async function deleteArticleById(id: string): Promise<void> {
         }
 
         console.log('Article deleted successfully');
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to delete article:', error);
         throw new Error(`Failed to delete article: ${error.message}`);
     }
@@ -98,7 +95,7 @@ export async function deleteArticleById(id: string): Promise<void> {
 
 export async function updateArticleById(id: string, updateData: UpdateArticleDto): Promise<Article> {
     try {
-        const response = await fetch(`http://localhost:4000/articles/${id}`, {
+        const response = await fetch(`${url}/articles/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +109,7 @@ export async function updateArticleById(id: string, updateData: UpdateArticleDto
         }
 
         return await response.json();
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(`Failed to update article: ${error.message}`);
     }
 }

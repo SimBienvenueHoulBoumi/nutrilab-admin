@@ -19,15 +19,16 @@ interface DecodedToken {
     exp: number;
 }
 
+const url = process.env.NEXT_PUBLIC_EXTERNAL_API_URL;
 
-export default async function verifyUser(username: string, password: string) {
+export default async function verifyUser(email: string, password: string) {
     try {
-        const response = await fetch(`${process.env.API_URL}/auth/login`, {
+        const response = await fetch(`${url}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ email, password }),
         });
 
         if (!response.ok) {
