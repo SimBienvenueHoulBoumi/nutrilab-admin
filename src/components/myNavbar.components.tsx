@@ -3,15 +3,13 @@
 import Link from "next/link";
 import React, { useCallback } from 'react';
 import { cleanAndRemoveToken } from "@/services/auth.service";
-import { useRouter } from 'next/navigation'
 
 export default function MyHeader() {
-    const router = useRouter();
 
-    const logout = useCallback(() => {
-        cleanAndRemoveToken();
-        router.push("/");
-    }, [router]);
+    const logout = useCallback(async () => {
+        await cleanAndRemoveToken();
+        window.location.href = '/';
+    }, []);
 
     return (
         <div className="bg-gray-800 text-white shadow-md h-screen flex flex-col justify-between">
@@ -29,12 +27,14 @@ export default function MyHeader() {
                     <div>Ingredients</div>
                 </Link>
             </div>
-            <button
-                onClick={logout}
-                className="bg-gray-600 m-2 p-2 hover:bg-red-500 text-white font-semibold rounded transition duration-300"
-            >
-                Logout
-            </button>
+            <div className="flex flex-col p-2">
+                <button
+                    onClick={logout}
+                    className="p-2 bg-gray-600 w-full hover:bg-red-500 text-white font-semibold rounded transition duration-300"
+                >
+                    Logout
+                </button>
+            </div>
         </div>
     );
 }
