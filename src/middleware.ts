@@ -34,8 +34,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         '/',
-        '/dashboard/home',
-        '/dashboard/users',
-        '/appropos'
+        '/dashboard/:path*',
+        '/appropos',
     ],
 };
