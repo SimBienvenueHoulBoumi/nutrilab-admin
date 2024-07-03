@@ -37,6 +37,8 @@ export default function Page() {
     const handleDeleteArticle = async (id: string) => {
         try {
             await deleteArticleById(id);
+            // Mise à jour de l'état des articles après suppression
+            setArticles(articles.filter(article => article.id !== id));
         } catch (error) {
             console.error(`Error deleting article with id ${id}:`, error);
         }
@@ -173,7 +175,7 @@ export default function Page() {
                             <td>{article.area}</td>
                             <td>{article.userId}</td>
                             <th>
-                                <button className="btn btn-error btn-xs" onSubmit={() => handleDeleteArticle(article.id)}>delete</button>
+                                <button className="btn btn-error btn-xs" onClick={() => handleDeleteArticle(article.id)}>delete</button>
                             </th>
                         </tr>
                     ))}
