@@ -10,6 +10,7 @@ interface IArticleFormValues {
   name: string;
   description: string;
   area: string;
+  preparation: string;
 }
 
 const continents = [
@@ -58,6 +59,12 @@ function CreateArticle() {
             />
             <CustomInput<IArticleFormValues>
               label="description"
+              type='text'
+              register={register}
+              required={true}
+            />
+            <CustomInput<IArticleFormValues>
+              label="preparation"
               type='text'
               register={register}
               required={true}

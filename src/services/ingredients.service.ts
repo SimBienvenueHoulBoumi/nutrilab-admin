@@ -5,7 +5,7 @@ import 'dotenv/config'
 
 const url = process.env.NEXT_PUBLIC_EXTERNAL_API_URL;
 
-export async function createIngredient(ingredientData: CreateIngredientDto, articleId: string): Promise<Ingredient> {
+export async function createIngredient(ingredientData: CreateIngredientDto, articleId: string): Promise<string> {
     try {
         const token = await getToken();
         const response = await fetch(`${url}/ingredients/${articleId}`, {
@@ -18,11 +18,10 @@ export async function createIngredient(ingredientData: CreateIngredientDto, arti
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
             throw new Error(`Network response was not ok: ${response.statusText}`);
         }
 
-        return await response.json();
+        return await response.text();
     } catch (error: any) {
         throw new Error(`Failed to create ingredient: ${error.message}`);
     }
