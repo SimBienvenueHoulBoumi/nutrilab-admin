@@ -1,10 +1,13 @@
-import { getToken } from "../services/auth.service";
+"use server";
+
 import {
   Article,
   CreateArticleDto,
   UpdateArticleDto,
 } from "../interface/article.interface";
 import "dotenv/config";
+import { cookies } from "next/headers";
+
 
 const url = process.env.NEXT_PUBLIC_EXTERNAL_API_URL;
 
@@ -12,7 +15,8 @@ export async function createArticle(
   articleData: CreateArticleDto
 ): Promise<string> {
   try {
-    const token = await getToken();
+    const token = cookies().get("token")?.value || "";
+
     const response = await fetch(`${url}/articles`, {
       method: "POST",
       headers: {
@@ -22,7 +26,7 @@ export async function createArticle(
       body: JSON.stringify(articleData),
     });
 
-    if ((await response.text()) != "article created") {
+    if ((await response.status) !== 201) {
       const errorText = await response.text();
       throw new Error(`Network response was not ok: ${errorText}`);
     }
@@ -36,7 +40,8 @@ export async function createArticle(
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const token = await getToken();
+    const token = cookies().get("token")?.value || "";
+
     const response = await fetch(`${url}/articles`, {
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +63,8 @@ export async function getArticles(): Promise<Article[]> {
 
 export async function getArticleById(id: string): Promise<Article> {
   try {
-    const token = await getToken();
+    const token = cookies().get("token")?.value || "";
+
     const response = await fetch(`${url}/articles/${id}`, {
       headers: {
         "Content-Type": "application/json",
@@ -78,28 +84,16 @@ export async function getArticleById(id: string): Promise<Article> {
   }
 }
 
-export async function deleteArticleById(id: string): Promise<string> {
-  try {
-    const token = await getToken();
-    const response = await fetch(`${url}/articles/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+export async function deleteArticleById(id: string): Promise<void> {
+  const token = cookies().get("token")?.value || "";
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Response error text:", errorText);
-      throw new Error(`Network response was not ok: ${errorText}`);
-    }
-
-    return "Article deleted successfully";
-  } catch (error: any) {
-    console.error("Failed to delete article:", error);
-    throw new Error(`Failed to delete article: ${error.message}`);
-  }
+  await fetch(`${url}/articles/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function updateArticleById(
@@ -107,7 +101,8 @@ export async function updateArticleById(
   updateData: UpdateArticleDto
 ): Promise<string> {
   try {
-    const token = await getToken();
+    const token = cookies().get("token")?.value || "";
+
     const response = await fetch(`${url}/articles/${id}`, {
       method: "PATCH",
       headers: {
@@ -117,14 +112,20 @@ export async function updateArticleById(
       body: JSON.stringify(updateData),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Network response was not ok: ${errorText}`);
+    const contentType = response.headers.get("content-type");
+    if (contentType) {
+      return await response.text();
+    } else {
+      const text = await response.text();
+      throw new Error(text);
     }
-
-    return await response.json();
-  } catch (error: any) {
-    console.error("Failed to update article:", error);
-    throw new Error(`Failed to update article: ${error.message}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(
+        `An error occurred while updating the article: ${error.message}`
+      );
+    } else {
+      throw new Error("An unknown error occurred while updating the article.");
+    }
   }
 }

@@ -101,7 +101,7 @@ function CreateIngredient() {
                         />
                         <CustomInput<IIngredientFormValues>
                             label="dosage"
-                            type='text'
+                            type='number'
                             register={register}
                             required={true}
                         />
