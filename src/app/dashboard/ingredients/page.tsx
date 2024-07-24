@@ -9,6 +9,9 @@ import { Article } from '@/interface/article.interface';
 
 import MyLoader from '@/components/loader.components';
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ITEMS_PER_PAGE = 5;
 
 export default function Page() {
@@ -90,6 +93,7 @@ export default function Page() {
       await Promise.all(Array.from(selectedIngredients).map(id => deleteIngredient(id, selectedArticleId)));
       setIngredients(prevIngredients => prevIngredients.filter(ingredient => !selectedIngredients.has(ingredient.id)));
       setSelectedIngredients(new Set());
+      toast.success('Selected ingredients deleted successfully');
     } catch (error: any) {
       throw new Error(`Failed to delete selected ingredients: ${error.message}`);
     } finally {
@@ -105,6 +109,7 @@ export default function Page() {
       setSelectedIngredients(prevSelected => {
         const newSelected = new Set(prevSelected);
         newSelected.delete(id);
+        toast.success('Ingredient deleted successfully');
         return newSelected;
       });
     } catch (error: any) {
@@ -140,6 +145,7 @@ export default function Page() {
 
   return (
     <div className="overflow-y-auto max-w-full">
+      <ToastContainer />
       <div className="flex flex-row space-x-2 my-2">
         <label className="input bg-white w-56 input-bordered flex items-center gap-2">
           <input

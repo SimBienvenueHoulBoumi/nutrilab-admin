@@ -6,6 +6,9 @@ import { Article } from '@/interface/article.interface';
 import { getArticles, deleteArticleById } from '@/services/articles.service';
 import MyLoader from '@/components/loader.components';
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ITEMS_PER_PAGE = 5;
 
 export default function Page() {
@@ -37,8 +40,8 @@ export default function Page() {
     const handleDeleteArticle = async (id: string) => {
         try {
             await deleteArticleById(id);
-            // Mise à jour de l'état des articles après suppression
             setArticles(articles.filter(article => article.id !== id));
+            toast.success('Article deleted successfully!');
         } catch (error) {
             console.error(`Error deleting article with id ${id}:`, error);
         }
@@ -46,10 +49,10 @@ export default function Page() {
 
     const handleDeleteSelectedArticles = async () => {
         try {
-            console.log(`Deleting selected articles with ids: ${selectedArticles}`); // Log the ids being deleted
             await Promise.all(selectedArticles.map(id => deleteArticleById(id)));
             setArticles(articles.filter(article => !selectedArticles.includes(article.id)));
             setSelectedArticles([]);
+            toast.success('Selected articles deleted successfully!');
         } catch (error) {
             console.error('Failed to delete selected articles:', error);
         }
@@ -101,6 +104,7 @@ export default function Page() {
 
     return (
         <div className="overflow-y-auto max-w-full">
+            <ToastContainer />
             <div className="flex flex-row space-x-2 my-2">
                 <label className="input bg-white w-56 input-bordered flex items-center gap-2">
                     <input
