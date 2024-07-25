@@ -67,7 +67,7 @@ export default function Page() {
   if (loading) return <MyLoader/>;
 
   return (
-    <div className="overflow-y-auto max-w-full">
+    <div className="overflow-y-auto  max-w-full">
       <div className="flex flex-row space-x-2 my-2">
         <label className="input bg-white w-56 input-bordered flex items-center gap-2">
           <input

@@ -1,40 +1,50 @@
 "use client";
 
 import Link from "next/link";
-import React, { useCallback } from 'react';
+import React, { useCallback } from "react";
 import { cleanAndRemoveToken } from "@/services/auth.service";
 
-export default function MyHeader() {
+export default function MyNavbar() {
+  const logout = useCallback(async () => {
+    await cleanAndRemoveToken();
+    window.location.href = "/";
+  }, []);
 
-    const logout = useCallback(async () => {
-        await cleanAndRemoveToken();
-        window.location.href = '/';
-    }, []);
-
-    return (
-        <div className="bg-gray-800 text-white shadow-md h-screen flex flex-col justify-between">
-            <div className="flex flex-col space-y-2 p-2 capitalize">
-                <Link className="hover:bg-gray-600 p-2" href="/dashboard/home">
-                    <div className="text-lg font-semibold">Home</div>
-                </Link>
-                <Link className="hover:bg-gray-600 p-2 text-sm" href="/dashboard/users">
-                    <div>Users</div>
-                </Link>
-                <Link className="hover:bg-gray-600 p-2 text-sm" href="/dashboard/articles">
-                    <div>Articles</div>
-                </Link>
-                <Link className="hover:bg-gray-600 p-2 text-sm" href="/dashboard/ingredients">
-                    <div>Ingredients</div>
-                </Link>
-            </div>
-            <div className="flex flex-col p-2">
-                <button
-                    onClick={logout}
-                    className="p-2 bg-gray-600 w-full hover:bg-red-500 text-white font-semibold rounded transition duration-300"
-                >
-                    Logout
-                </button>
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex flex-row justify-between">
+      {/* Navbar content */}
+      <div className="flex flex-row space-x-2 m-2">
+        <Link
+          href="/dashboard/home"
+          className="block p-2 hover:bg-gray-600 rounded"
+        >
+          <div>Home</div>
+        </Link>
+        <Link
+          href="/dashboard/users"
+          className="block p-2 hover:bg-gray-600 rounded"
+        >
+          <div>Users</div>
+        </Link>
+        <Link
+          href="/dashboard/articles"
+          className="block p-2 hover:bg-gray-600 rounded"
+        >
+          <div>Articles</div>
+        </Link>
+        <Link
+          href="/dashboard/ingredients"
+          className="block p-2 hover:bg-gray-600 rounded"
+        >
+          <div>Ingredients</div>
+        </Link>
+      </div>
+      <button
+        onClick={logout}
+        className="bg-gray-600 w-[200px] p-2 m-2 hover:bg-red-500 text-white font-semibold rounded transition duration-300"
+      >
+        Logout
+      </button>
+    </div>
+  );
 }

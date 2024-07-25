@@ -123,7 +123,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="overflow-y-auto max-w-full">
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
         <p className="text-gray-600">Welcome to your dashboard. Here you can manage your data and view analytics.</p>

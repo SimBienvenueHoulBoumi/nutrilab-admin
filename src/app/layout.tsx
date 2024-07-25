@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   description: "nutrilab admin interface",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className} suppressHydrationWarning>
+      <body className="w-screen" suppressHydrationWarning>
         {children}
       </body>
     </html>

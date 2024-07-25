@@ -31,13 +31,13 @@ function Home() {
     };
 
     return (
-        <div className="h-full bg-gradient-to-r from-[#9bee75] to-[#DFAF2C] flex items-center justify-center px-4 py-auto sm:px-6 lg:px-8">
-            <div className="w-full space-y-8">
-                <div className="bg-white m-auto w-4/12 shadow-lg rounded-md p-6">
-                    <h2 className="my-3 text-center text-3xl font-bold tracking-tight text-gray-900">
+        <div className="min-h-screen bg-gradient-to-r from-[#9bee75] to-[#DFAF2C] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md space-y-8">
+                <div className="bg-white m-auto w-full shadow-lg rounded-md p-6 sm:p-8 lg:p-10">
+                    <h2 className="my-3 text-center text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
                         Access admin dashboard
                     </h2>
-                    <form className="space-y-3" method="POST" onSubmit={handleSubmit(onSubmit)}>
+                    <form className="space-y-4" method="POST" onSubmit={handleSubmit(onSubmit)}>
                         <CustomInput
                             label="email"
                             type='email'
