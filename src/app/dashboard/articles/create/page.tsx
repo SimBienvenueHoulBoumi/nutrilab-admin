@@ -35,13 +35,12 @@ function CreateArticle() {
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       await createArticle(data);
       setLoading(false);
       setTimeout(() => {
         toast.success("Article created successfully");
         window.location.href = "/dashboard/articles";
-      }, 2000);
+      }, 5000);
     } catch (error) {
       toast.error("An error occurred while creating the article");
       setLoading(false);
