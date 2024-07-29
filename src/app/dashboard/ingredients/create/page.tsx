@@ -56,9 +56,9 @@ function CreateIngredient() {
           type: "success",
         });
         window.location.href = "/dashboard/ingredients";
-      }, 2000);
+      }, 5000);
     } catch (error) {
-      console.error("Error creating ingredient:", error);
+      toast.error("An error occurred while creating the ingredient");
       setLoading(false);
     }
   };
