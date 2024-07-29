@@ -7,6 +7,9 @@ import MyLoader from '@/components/loader.components';
 
 const ITEMS_PER_PAGE = 5;
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Page() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,6 +61,7 @@ export default function Page() {
     try {
       await deleteUserById(id);
       fetchUsers();
+      toast.success('User deleted successfully!');
     } catch (error) {
       console.error('Failed to delete user:', error);
     }
@@ -68,6 +72,7 @@ export default function Page() {
 
   return (
     <div className="overflow-y-auto  max-w-full">
+      <ToastContainer />
       <div className="flex flex-row space-x-2 my-2">
         <label className="input bg-white w-56 input-bordered flex items-center gap-2">
           <input
