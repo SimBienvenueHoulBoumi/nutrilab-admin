@@ -226,7 +226,7 @@ export default function Page() {
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="table-auto w-full bg-white rounded-xl text-center">
+        <table className="table-auto w-full bg-white rounded-xl text-left ">
           <thead>
             <tr>
               <th className="p-2 w-1/12">
@@ -261,10 +261,10 @@ export default function Page() {
                     />
                   </label>
                 </td>
-                <td className="p-2 w-4/12">{ingredient.name}</td>
-                <td className="p-2 w-4/12">{ingredient.labelDosage}</td>
+                <td className="p-2 w-3/12">{ingredient.name}</td>
+                <td className="p-2 w-3/12">{ingredient.labelDosage}</td>
                 <td className="p-2 w-3/12">{ingredient.dosage}</td>
-                <td className="p-2 w-1/12">
+                <td className="p-2 w-3/12">
                   <button
                     className="btn btn-error btn-xs"
                     onClick={() => handleDeleteIngredient(ingredient.id)}
