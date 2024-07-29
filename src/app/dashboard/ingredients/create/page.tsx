@@ -51,10 +51,10 @@ function CreateIngredient() {
     try {
       await createIngredient(data, selectedArticleId);
       setLoading(false);
-      toast("Ingredient created successfully!", {
-        type: "success",
-      });
       setTimeout(() => {
+        toast("Ingredient created successfully!", {
+          type: "success",
+        });
         window.location.href = "/dashboard/ingredients";
       }, 2000);
     } catch (error) {
