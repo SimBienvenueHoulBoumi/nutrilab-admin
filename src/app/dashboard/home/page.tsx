@@ -4,17 +4,19 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Ingredient } from "@/interface/ingredients.interface";
-import { getArticles } from "@/services/articles.service";
+import { getArticles, countArticles } from "@/services/articles.service";
 import {
   getIngredients,
   deleteIngredient,
 } from "@/services/ingredients.service";
 import { Article } from "@/interface/article.interface";
 
-const ITEMS_PER_PAGE = 5;
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import { usersRegister } from "@/services/users.service";
+
+const ITEMS_PER_PAGE = 5;
 
 export default function Dashboard() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -22,6 +24,8 @@ export default function Dashboard() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [articlesCount, setArticlesCount] = useState<number | null>(null);
+  const [usersCount, setUsersCount] = useState<number | null>(null); // Added state for users count
   const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(
     new Set()
   );
@@ -53,6 +57,32 @@ export default function Dashboard() {
       fetchIngredients();
     }
   }, [selectedArticleId]);
+
+  useEffect(() => {
+    const fetchArticlesCount = async () => {
+      try {
+        const count = await countArticles();
+        setArticlesCount(count);
+      } catch (error) {
+        console.error("Failed to fetch articles count:", error);
+      }
+    };
+
+    fetchArticlesCount();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsersCount = async () => {
+      try {
+        const count = await usersRegister(); // Fetch users count
+        setUsersCount(count);
+      } catch (error) {
+        console.error("Failed to fetch users count:", error);
+      }
+    };
+
+    fetchUsersCount();
+  }, []);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -163,6 +193,22 @@ export default function Dashboard() {
           Welcome to your dashboard. Here you can manage your data and view
           analytics.
         </p>
+      </div>
+
+      <div className="flex space-x-3">
+        <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+          <h2 className="text-xl font-bold mb-2">Articles saved</h2>
+          <p className="text-3xl">
+            {articlesCount !== null ? articlesCount : "Loading..."}
+          </p>
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+          <h2 className="text-xl font-bold mb-2">Registered Users</h2>
+          <p className="text-3xl">
+            {usersCount !== null ? usersCount : "Loading..."}
+          </p>
+        </div>
       </div>
 
       <div className="bg-white shadow-md rounded-lg p-6">

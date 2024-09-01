@@ -132,3 +132,4 @@ export async function deleteIngredient(
     throw new Error(`Failed to delete ingredient: ${error.message}`);
   }
 }
+

@@ -8,7 +8,6 @@ import {
 import "dotenv/config";
 import { cookies } from "next/headers";
 
-
 const url = process.env.NEXT_PUBLIC_EXTERNAL_API_URL;
 
 export async function createArticle(
@@ -129,3 +128,8 @@ export async function updateArticleById(
     }
   }
 }
+
+export async function countArticles(): Promise<number> {
+  return (await getArticles()).length;
+}
+

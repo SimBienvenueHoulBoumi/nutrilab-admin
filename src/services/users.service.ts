@@ -46,3 +46,7 @@ export async function deleteUserById(id: string): Promise<void> {
         throw new Error('Network response was not ok');
     }
 }
+
+export async function usersRegister(): Promise<number>{
+    return (await getUsers()).length;
+}
