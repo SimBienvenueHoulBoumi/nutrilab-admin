@@ -185,9 +185,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="overflow-y-auto max-w-full">
+    <div className="h-full flex flex-col items-center justify-center px-2 py-auto sm:px-3 lg:px-4">
       <ToastContainer />
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-full">
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
         <p className="text-gray-600">
           Welcome to your dashboard. Here you can manage your data and view
@@ -195,7 +195,7 @@ export default function Dashboard() {
         </p>
       </div>
 
-      <div className="flex space-x-3">
+      <div className="flex space-x-3 w-full">
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
           <h2 className="text-xl font-bold mb-2">Articles saved</h2>
           <p className="text-3xl">
@@ -211,7 +211,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="bg-white shadow-md rounded-lg p-6">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full">
         <div className="flex justify-between mb-4">
           <h2 className="text-xl font-bold">Articles</h2>
           <Link className="btn btn-secondary" href="/dashboard/articles/create">
